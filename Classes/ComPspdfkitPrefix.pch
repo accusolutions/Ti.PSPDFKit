@@ -1,0 +1,22 @@
+//
+//  Copyright (c) 2011-2021 PSPDFKit GmbH. All rights reserved.
+//
+//  THIS SOURCE CODE AND ANY ACCOMPANYING DOCUMENTATION ARE PROTECTED BY AUSTRIAN COPYRIGHT LAW
+//  AND MAY NOT BE RESOLD OR REDISTRIBUTED. USAGE IS BOUND TO THE PSPDFKIT LICENSE AGREEMENT.
+//  UNAUTHORIZED REPRODUCTION OR DISTRIBUTION IS SUBJECT TO CIVIL AND CRIMINAL PENALTIES.
+//  This notice may not be removed from this file.
+//
+
+#import <UIKit/UIKit.h>
+
+// HACK: Titanium defines this macro, JavaScriptCore does as well.
+#ifdef JSC_OBJC_API_ENABLED
+#undef JSC_OBJC_API_ENABLED
+#endif
+
+//#define kPSCLogEnabled
+#ifdef kPSCLogEnabled
+#define PSCLog(fmt, ...) NSLog((@"%s/%d " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#define PSCLog(...)
+#endif

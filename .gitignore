@@ -1,0 +1,38 @@
+# macOS boilerplate.
+.DS_Store
+.Trashes
+.localized
+
+# Xcode boilerplate.
+xcuserdata
+*.pbxuser
+*.xccheckout
+*.xcuserstate
+
+# Build artifacts.
+build
+dist
+metadata.json
+module.xcconfig
+platform
+Podfile
+Podfile.lock
+Pods
+titanium.xcconfig
+
+# Do not ignore templates.
+!scripts/templates/*
+
+# Node.js artifacts.
+package-lock.json
+node_modules
+
+# Version manager artifacts.
+.nvmrc
+.tool-versions
+
+# PSPDFKit binaries.
+PSPDFKit.framework
+PSPDFKit.xcframework
+PSPDFKitUI.framework
+PSPDFKitUI.xcframework
