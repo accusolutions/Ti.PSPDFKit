@@ -73,6 +73,9 @@
 /// Bookmark the current page
 - (void)bookmarkPage:(id)arg;
 
+/// Bookmark the current page
+- (void)enableBookmarkButton:(id)arg;
+
 /// Exposes a helper to change link annotation stroke width. Set to change.
 - (void)setLinkAnnotationStrokeWidth:(id)arg;
 

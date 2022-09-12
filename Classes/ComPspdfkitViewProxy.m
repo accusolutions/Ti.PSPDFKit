@@ -240,6 +240,11 @@ _Pragma("clang diagnostic pop") \
     [[[self pdfView] controllerProxy] bookmarkPage:arg];
 }
 
+- (void)enableBookmarkButton:(id)arg {
+    ENSURE_UI_THREAD(enableBookmarkButton, arg);
+    [[[self pdfView] controllerProxy] enableBookmarkButton:arg];
+}
+
 @end
 
 @implementation ComPspdfkitSourceViewProxy

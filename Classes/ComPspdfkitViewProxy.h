@@ -97,6 +97,8 @@
 /// Bookmark the current page
 - (void)bookmarkPage:(id)arg;
 
+/// Enable bookmark button
+- (void)enableBookmarkButton:(id)arg;
 
 @end
 

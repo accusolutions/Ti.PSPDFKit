@@ -221,9 +221,9 @@ void (^tipspdf_targetActionBlock(id target, SEL action))(id) {
             filter = [PSSafeCast(filter, NSString.class) lowercaseString];
             if ([filter isEqual:@"search"]) {
                 menuActions |= PSPDFTextSelectionMenuActionSearch;
-            }else if ([filter isEqual:@"define"]) {
+            } else if ([filter isEqual:@"define"]) {
                 menuActions |= PSPDFTextSelectionMenuActionDefine;
-            }else if ([filter isEqual:@"wikipedia"]) {
+            } else if ([filter isEqual:@"wikipedia"]) {
                 menuActions |= PSPDFTextSelectionMenuActionWikipedia;
             }
         }
@@ -377,6 +377,14 @@ _Pragma("clang diagnostic pop")
     pst_targetActionBlock(bookmarkButtonItem.target, bookmarkButtonItem.action)(bookmarkButtonItem);
 }
 
+- (void)enableBookmarkButton:(id)arg {
+    ENSURE_UI_THREAD(enableBookmarkButton, arg);
+    
+    UIBarButtonItem *bookmarkButtonItem = self.controller.bookmarkButtonItem;
+    [bookmarkButtonItem setEnabled:YES];
+    [[self.controller pdfController] setBarButtonItemsAlwaysEnabled:@[bookmarkButtonItem]];
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - TiProxyDelegate
 
@@ -435,6 +443,13 @@ _Pragma("clang diagnostic pop")
 
     BOOL processed = NO;
     if(self.didTapOnAnnotationCallback) {
+        eventDict[@"annotation"] = @{
+            @"name":annotation.name == nil ? @"null" : annotation.name,
+            @"user":annotation.user == nil ? @"null" : annotation.user,
+            @"group":annotation.group == nil ? @"null" : annotation.group,
+            @"uuid":annotation.uuid == nil ? @"null" : annotation.uuid,
+            @"type":@(annotation.type),            
+        };
         id retVal = [self.didTapOnAnnotationCallback call:@[eventDict] thisObject:nil];
         processed = [retVal boolValue];
         PSCLog(@"retVal: %d", processed);

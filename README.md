@@ -157,6 +157,7 @@ const PSPDFKit = require("com.pspdfkit")
 
 const view = PSPDFKit.createView({
     filename: "PSPDFKit.pdf",
+    withKeychainSignatureStore:true,/** @TODO Update Docs **/
     options: {
         pageMode: 0, // PSPDFPageModeSingle
         pageTransition: 2, // PSPDFPageCurlTransition
@@ -165,6 +166,12 @@ const view = PSPDFKit.createView({
         title: "Custom Title",
     },
 })
+
+/** @TODO Update Docs **/
+view.setSignatureCreationConfiguration({
+  availableModes: [0]
+});
+
 ```
 
 Please refer to the documentation comments in [ComPspdfkitModule.h](Classes/ComPspdfkitModule.h) and [ComPspdfkitViewProxy.h](Classes/ComPspdfkitViewProxy.h) to learn more about the available API.
