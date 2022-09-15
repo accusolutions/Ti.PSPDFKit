@@ -9,6 +9,7 @@
 
 #import <PSPDFKitUI/PSPDFKitUI.h>
 #import <TitaniumKit/TitaniumKit.h>
+#import "TIPSPDFDocumentFeaturesSource.h"
 
 @class TIPSPDFViewControllerProxy;
 

@@ -440,6 +440,12 @@ _Pragma("clang diagnostic pop")
             if (actionTypeString) eventDict[@"actionType"] = actionTypeString;
         }
     }
+    
+    bool isSignature = false;
+    if([annotation isKindOfClass:[PSPDFInkAnnotation class]]){
+        PSPDFInkAnnotation *ann = (PSPDFInkAnnotation *)annotation;
+        isSignature = ann.isSignature;
+    }
 
     BOOL processed = NO;
     if(self.didTapOnAnnotationCallback) {
@@ -448,7 +454,9 @@ _Pragma("clang diagnostic pop")
             @"user":annotation.user == nil ? @"null" : annotation.user,
             @"group":annotation.group == nil ? @"null" : annotation.group,
             @"uuid":annotation.uuid == nil ? @"null" : annotation.uuid,
-            @"type":@(annotation.type),            
+            @"type":@(annotation.type),
+            @"type_str":[PSPDFUtils parseAnnotationTypeToString:annotation.type],
+            @"is_signature":@(isSignature)
         };
         id retVal = [self.didTapOnAnnotationCallback call:@[eventDict] thisObject:nil];
         processed = [retVal boolValue];
@@ -528,6 +536,84 @@ _Pragma("clang diagnostic pop")
     if ([[self eventProxy] _hasListeners:@"didHideUserInterface"]) {
         [[self eventProxy] fireEvent:@"didHideUserInterface" withObject:nil];
     }
+}
+
+
+- (void)exportAnnotationsJSON:(id)callback {
+    ENSURE_SINGLE_ARG(callback, KrollCallback);
+    NSError *error;
+    NSDictionary *params;
+    NSData *data = [[self.controller pdfController].document generateInstantJSONFromDocumentProvider:[self.controller pdfController].document.documentProviders.firstObject error:&error];
+    if (error==nil) {
+        id object = [NSJSONSerialization
+                              JSONObjectWithData:data
+                              options:0
+                              error:&error];
+        params = @{
+            @"success":@(YES),
+            @"json":(NSDictionary *)object
+        };
+        [callback call:[[NSArray alloc] initWithObjects:&params count:1] thisObject:self];
+        
+        return;
+    }
+        
+    params = @{
+        @"success":@(NO),
+        @"error":error.localizedDescription
+    };
+    [callback call:[[NSArray alloc] initWithObjects:&params count:1] thisObject:self];
+    
+    return;
+}
+
+- (void)exportAnnotationsXFDF:(id)callback {
+    ENSURE_SINGLE_ARG(callback, KrollCallback);
+    // Collect all existing annotations from the document.
+    NSMutableArray<PSPDFAnnotation *> *annotations = [NSMutableArray<PSPDFAnnotation *> array];
+    for (NSArray<PSPDFAnnotation *> *pageAnnotations in [[self.controller pdfController].document allAnnotationsOfType:PSPDFAnnotationTypeAll].allValues) {
+        [annotations addObjectsFromArray:pageAnnotations];
+    }
+
+    // Write the file.
+    NSURL *tmpFile = [PSPDFUtils createTmpFile:@"annotations.xfpdf"];
+    NSDictionary *params;
+    if(tmpFile!=nil){
+        NSError *error;
+        PSPDFFileDataSink *dataSink = [[PSPDFFileDataSink alloc] initWithFileURL:tmpFile options:PSPDFDataSinkOptionNone error:&error];
+        NSAssert(dataSink != nil, @"%@", error);
+        if (error==nil) {
+            if([[PSPDFXFDFWriter new] writeAnnotations:annotations toDataSink:dataSink documentProvider:[self.controller pdfController].document.documentProviders.firstObject error:&error]){
+                params = @{
+                    @"success":@(YES),
+                    @"xfpdf":[NSString stringWithContentsOfFile:[tmpFile relativePath]
+                                                       encoding:NSUTF8StringEncoding
+                                                          error:nil]
+                };
+                [callback call:[[NSArray alloc] initWithObjects:&params count:1] thisObject:self];
+                return;
+            }
+            params = @{
+                @"success":@(NO),
+                @"error":error.localizedDescription
+            };
+            [callback call:[[NSArray alloc] initWithObjects:&params count:1] thisObject:self];
+            return;
+        }
+        params = @{
+            @"success":@(NO),
+            @"error":error.localizedDescription
+        };
+        [callback call:[[NSArray alloc] initWithObjects:&params count:1] thisObject:self];
+        return;
+    }
+        
+    params = @{
+        @"success":@(NO),
+        @"error":@"Could not create tmp file."
+    };
+    [callback call:[[NSArray alloc] initWithObjects:&params count:1] thisObject:self];
+    return;
 }
 
 @end

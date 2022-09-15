@@ -100,6 +100,12 @@
 /// Enable bookmark button
 - (void)enableBookmarkButton:(id)arg;
 
+/// Export Annotations as JSON
+- (void)exportAnnotationsJSON:(id)callback;
+
+/// Export Annotations as XFDF
+- (void)exportAnnotationsXFDF:(id)callback;
+
 @end
 
 @interface ComPspdfkitSourceViewProxy : ComPspdfkitViewProxy @end

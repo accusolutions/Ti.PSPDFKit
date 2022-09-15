@@ -9,6 +9,7 @@
 
 #import <PSPDFKitUI/PSPDFKitUI.h>
 #import <TitaniumKit/TitaniumKit.h>
+#import <TiFile.h>
 
 @class TIPSPDFViewController, ComPspdfkitModule, ComPspdfkitViewProxy;
 
@@ -114,5 +115,11 @@
 
 // Hide any visible popover. arg: animated YES/NO
 - (void)hidePopover:(id)args;
+
+/// Export Annotations as JSON
+- (void)exportAnnotationsJSON:(id)callback;
+
+/// Export Annotations as XFDF
+- (void)exportAnnotationsXFDF:(id)callback;
 
 @end

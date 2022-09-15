@@ -7,6 +7,7 @@
 //  This notice may not be removed from this file.
 //
 
+#import <PSPDFKit/PSPDFKit.h>
 #import <PSPDFKitUI/PSPDFKitUI.h>
 #import <TitaniumKit/TitaniumKit.h>
 
@@ -40,6 +41,10 @@ FOUNDATION_EXTERN void (^pst_targetActionBlock(id target, SEL action))(id);
 
 // Returns color from the first argument.
 + (UIColor *)colorFromArg:(id)arg;
+
++ (NSURL *)createTmpFile:(NSString *)fileName;
+
++ (NSString *)parseAnnotationTypeToString:(PSPDFAnnotationType)type;
 
 @end
 

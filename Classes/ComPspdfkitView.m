@@ -12,6 +12,7 @@
 #import "PSPDFUtils.h"
 #import "TIPSPDFViewController.h"
 #import "TIPSPDFViewControllerProxy.h"
+#import "TIPSPDFDocumentFeaturesSource.h"
 #import <libkern/OSAtomic.h>
 
 @interface ComPspdfkitView ()
@@ -25,7 +26,6 @@
 
 - (void)createControllerProxy {
     PSTiLog(@"createControllerProxy");
-
     if (!_controllerProxy) { // self triggers creation
         NSArray *pdfPaths = [PSPDFUtils resolvePaths:[self.proxy valueForKey:@"filename"]];
         NSMutableArray<PSPDFCoordinatedFileDataProvider *> *dataProviders = [NSMutableArray array];
@@ -38,14 +38,43 @@
                 }
             }
         }
-
+                
+        /// honorDocumentPermissions
+        id honorDocumentPermissions = [self.proxy valueForKey:@"honorDocumentPermissions"];
+        
+        if(honorDocumentPermissions!=nil){
+            NSLog(@"[WARN] honorDocumentPermissions => %@ = %@",@"honorDocumentPermissions",honorDocumentPermissions ? @"true" : @"false");
+            [PSPDFKitGlobal.sharedInstance setValue:@([honorDocumentPermissions boolValue]) forKey:PSPDFSettingKeyHonorDocumentPermissions];
+        }
+                
+        
         PSPDFDocument *pdfDocument = [[PSPDFDocument alloc] initWithDataProviders:dataProviders];
-        bool withKeychainSignatureSore = [[self.proxy valueForKey:@"withKeychainSignatureSore"] boolValue];        
+        
+        [pdfDocument setBookmarksEnabled:YES];
+        
+        /// features
+        id features = [self.proxy valueForKey:@"features"];
+        if(features!=nil){
+            id<PSPDFDocumentFeaturesSource> source = [[TIPSPDFDocumentFeaturesSource alloc] initWithDict:features];
+            [pdfDocument.features addSources:@[source]];
+        }
+        
+
+        /// withKeychainSignatureSore
+        id withKeychainSignatureSore = [self.proxy valueForKey:@"withKeychainSignatureSore"];
+        
         TIPSPDFViewController *pdfController = [[TIPSPDFViewController alloc] initWithDocument:pdfDocument configuration:[PSPDFConfiguration configurationWithBuilder:^(PSPDFConfigurationBuilder *builder) {
-            if(withKeychainSignatureSore){
+            if(withKeychainSignatureSore!=nil && [withKeychainSignatureSore boolValue]){
                 builder.signatureStore = [[PSPDFKeychainSignatureStore alloc] init];
             }
         }]];
+        
+        id saveAfterToolbarHiding = [self.proxy valueForKey:@"saveAfterToolbarHiding"];
+            
+        
+        if(saveAfterToolbarHiding!=nil){
+            [pdfController.annotationToolbarController.annotationToolbar setSaveAfterToolbarHiding:[saveAfterToolbarHiding boolValue]];
+        }
 
         NSDictionary *options = [self.proxy valueForKey:@"options"];
         [PSPDFUtils applyOptions:options onObject:pdfController];
@@ -61,6 +90,9 @@
         // Encapsulate controller into proxy.
         self.controllerProxy = [[TIPSPDFViewControllerProxy alloc] initWithPDFController:pdfController context:self.proxy.pageContext parentProxy:self.proxy];
 
+        
+        
+        
         if (!pdfController.configuration.useParentNavigationBar && !navBarHidden) {
             UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:pdfController];
 

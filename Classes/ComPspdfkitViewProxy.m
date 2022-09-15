@@ -245,6 +245,16 @@ _Pragma("clang diagnostic pop") \
     [[[self pdfView] controllerProxy] enableBookmarkButton:arg];
 }
 
+- (void)exportAnnotationsJSON:(id)callback {
+    ENSURE_SINGLE_ARG(callback, KrollCallback);
+    [[[self pdfView] controllerProxy] exportAnnotationsJSON:callback];
+}
+
+- (void)exportAnnotationsXFDF:(id)callback {
+    ENSURE_SINGLE_ARG(callback, KrollCallback);
+    [[[self pdfView] controllerProxy] exportAnnotationsXFDF:callback];
+}
+
 @end
 
 @implementation ComPspdfkitSourceViewProxy

@@ -26,6 +26,8 @@
 		3AFF6A112465F159004587CE /* ComPspdfkitModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AFF6A002465F159004587CE /* ComPspdfkitModuleAssets.m */; };
 		3AFF6A122465F159004587CE /* PSPDFUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AFF6A012465F159004587CE /* PSPDFUtils.h */; };
 		3AFF6A132465F159004587CE /* ComPspdfkitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AFF6A022465F159004587CE /* ComPspdfkitView.h */; };
+		5DD7B41428D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD7B41228D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.h */; };
+		5DD7B41528D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DD7B41328D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +51,8 @@
 		3AFF6A002465F159004587CE /* ComPspdfkitModuleAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComPspdfkitModuleAssets.m; sourceTree = "<group>"; };
 		3AFF6A012465F159004587CE /* PSPDFUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSPDFUtils.h; sourceTree = "<group>"; };
 		3AFF6A022465F159004587CE /* ComPspdfkitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComPspdfkitView.h; sourceTree = "<group>"; };
+		5DD7B41228D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TIPSPDFDocumentFeaturesSource.h; sourceTree = "<group>"; };
+		5DD7B41328D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TIPSPDFDocumentFeaturesSource.m; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libComPspdfkit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComPspdfkit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -107,6 +111,8 @@
 				3AFF69FD2465F159004587CE /* TIPSPDFViewController.m */,
 				3AFF69F82465F159004587CE /* TIPSPDFViewControllerProxy.h */,
 				3AFF69FA2465F159004587CE /* TIPSPDFViewControllerProxy.m */,
+				5DD7B41228D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.h */,
+				5DD7B41328D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -138,6 +144,7 @@
 				3AFF6A122465F159004587CE /* PSPDFUtils.h in Headers */,
 				3AFF6A132465F159004587CE /* ComPspdfkitView.h in Headers */,
 				3AFF6A0C2465F159004587CE /* ComPspdfkitPrefix.pch in Headers */,
+				5DD7B41428D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.h in Headers */,
 				3AFF6A032465F159004587CE /* TIPSPDFAnnotationProxy.h in Headers */,
 				3AFF6A0F2465F159004587CE /* ComPspdfkitModuleAssets.h in Headers */,
 				3AFF6A0D2465F159004587CE /* ComPspdfkitModule.h in Headers */,
@@ -199,6 +206,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DD7B41528D1FC4A00A18238 /* TIPSPDFDocumentFeaturesSource.m in Sources */,
 				3AFF6A0B2465F159004587CE /* TIPSPDFViewControllerProxy.m in Sources */,
 				3AFF6A112465F159004587CE /* ComPspdfkitModuleAssets.m in Sources */,
 				3AFF6A062465F159004587CE /* ComPspdfkitModule.m in Sources */,

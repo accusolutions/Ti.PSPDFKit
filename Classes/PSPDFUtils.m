@@ -257,6 +257,114 @@
     return documents;
 }
 
++ (NSURL *)createTmpFile:(NSString *)fileName {
+    NSFileManager* fm = [NSFileManager defaultManager];
+    NSError* error = nil;
+    NSURL* docsurl = [fm URLForDirectory:NSDocumentDirectory
+                   inDomain:NSUserDomainMask appropriateForURL:nil
+                     create:YES error:&error];    
+    if(error==nil){
+        NSURL *tmpFile = [docsurl URLByAppendingPathComponent:fileName];
+        NSData *contents = [@"" dataUsingEncoding:NSUTF8StringEncoding];
+        if([fm createFileAtPath:[tmpFile relativePath] contents:contents attributes:nil]){
+            return tmpFile;
+        }
+        return nil;
+    }
+    return nil;
+}
+
++ (NSString *)parseAnnotationTypeToString:(PSPDFAnnotationType)type {
+    if(type==PSPDFAnnotationTypeAll){
+        return @"all";
+    }
+    if(type==PSPDFAnnotationTypeNone){
+        return @"none";
+    }
+    if(type==PSPDFAnnotationTypeUndefined){
+        return @"undefined";
+    }
+    if(type==PSPDFAnnotationTypeLink){
+        return @"link";
+    }
+    if(type==PSPDFAnnotationTypeHighlight){
+        return @"highlight";
+    }
+    if(type==PSPDFAnnotationTypeStrikeOut){
+        return @"strike_out";
+    }
+    if(type==PSPDFAnnotationTypeUnderline){
+        return @"underline";
+    }
+    if(type==PSPDFAnnotationTypeUnderline){
+        return @"underline";
+    }
+    if(type==PSPDFAnnotationTypeSquiggly){
+        return @"squiggly";
+    }
+    if(type==PSPDFAnnotationTypeFreeText){
+        return @"free_text";
+    }
+    if(type==PSPDFAnnotationTypeInk){
+        return @"ink";
+    }
+    if(type==PSPDFAnnotationTypeSquare){
+        return @"square";
+    }
+    if(type==PSPDFAnnotationTypeCircle){
+        return @"circle";
+    }
+    if(type==PSPDFAnnotationTypeLine){
+        return @"line";
+    }
+    if(type==PSPDFAnnotationTypeNote){
+        return @"note";
+    }
+    if(type==PSPDFAnnotationTypeStamp){
+        return @"stamp";
+    }
+    if(type==PSPDFAnnotationTypeCaret){
+        return @"caret";
+    }
+    if(type==PSPDFAnnotationTypeRichMedia){
+        return @"rich_media";
+    }
+    if(type==PSPDFAnnotationTypeScreen){
+        return @"screen";
+    }
+    if(type==PSPDFAnnotationTypeWidget){
+        return @"widget";
+    }
+    if(type==PSPDFAnnotationTypeFile){
+        return @"file";
+    }
+    if(type==PSPDFAnnotationTypeSound){
+        return @"sound";
+    }
+    if(type==PSPDFAnnotationTypePolygon){
+        return @"polygon";
+    }
+    if(type==PSPDFAnnotationTypePolyLine){
+        return @"polyline";
+    }
+    if(type==PSPDFAnnotationTypeRedaction){
+        return @"redaction";
+    }
+    if(type==PSPDFAnnotationTypePopup){
+        return @"popup";
+    }
+    if(type==PSPDFAnnotationTypeWatermark){
+        return @"watermark";
+    }
+    if(type==PSPDFAnnotationTypeTrapNet){
+        return @"trap_net";
+    }
+    if(type==PSPDFAnnotationTypeThreeDimensional){
+        return @"three_dimensional";
+    }
+    return @"unknown";
+}
+
 @end
 
 void ps_dispatch_sync_if(dispatch_queue_t queue, BOOL sync, dispatch_block_t block) {
