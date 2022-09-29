@@ -16,8 +16,7 @@
 
 - (instancetype)initWithDict:(NSDictionary *)features {
     self = [super init];
-    for (NSString *key in features){
-        NSLog(@"[WARN] features => %@ = %@",key,[features[key] boolValue] ? @"true" : @"false");
+    for (NSString *key in features){        
         [self setValue:features[key] forKey:key];
     }
     [[self features] updateFeatures];
