@@ -112,6 +112,15 @@ static BOOL PSTReplaceMethodWithBlock(Class c, SEL origSEL, SEL newSEL, id block
             PSPDFInkAnnotation *ann = (PSPDFInkAnnotation *)annotation;
             isSignature = ann.isSignature;
         }
+        NSLog(@"[WARN] Event Params %@",[@{
+            @"name":annotation.name == nil ? @"null" : annotation.name,
+            @"user":annotation.user == nil ? @"null" : annotation.user,
+            @"group":annotation.group == nil ? @"null" : annotation.group,
+            @"uuid":annotation.uuid == nil ? @"null" : annotation.uuid,
+            @"type":@(annotation.type),
+            @"type_str":[PSPDFUtils parseAnnotationTypeToString:annotation.type],
+            @"is_signature":@(isSignature)
+        } description]);
         [self fireEvent:eventName withObject:@{
             @"name":annotation.name == nil ? @"null" : annotation.name,
             @"user":annotation.user == nil ? @"null" : annotation.user,
