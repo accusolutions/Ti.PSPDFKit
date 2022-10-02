@@ -43,7 +43,6 @@
         id honorDocumentPermissions = [self.proxy valueForKey:@"honorDocumentPermissions"];
         
         if(honorDocumentPermissions!=nil){
-            NSLog(@"[WARN] honorDocumentPermissions => %@ = %@",@"honorDocumentPermissions",honorDocumentPermissions ? @"true" : @"false");
             [PSPDFKitGlobal.sharedInstance setValue:@([honorDocumentPermissions boolValue]) forKey:PSPDFSettingKeyHonorDocumentPermissions];
         }
                 

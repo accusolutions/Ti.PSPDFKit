@@ -62,6 +62,10 @@ static BOOL PSTReplaceMethodWithBlock(Class c, SEL origSEL, SEL newSEL, id block
 
     // Appcelerator doesn't cope well with high memory usage.
     PSPDFKitGlobal.sharedInstance[@"com.pspdfkit.low-memory-mode"] = @YES;
+    
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(annotationAddedNotification:) name:PSPDFAnnotationsAddedNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(annotationChangedNotification:) name:PSPDFAnnotationChangedNotification object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(annotationRemovedNotification:) name:PSPDFAnnotationsRemovedNotification object:nil];
 }
 
 // this method is called when the module is being unloaded
@@ -77,6 +81,35 @@ static BOOL PSTReplaceMethodWithBlock(Class c, SEL origSEL, SEL newSEL, id block
 
 - (NSString *)moduleId {
 	return @"com.pspdfkit";
+}
+
+- (void)annotationAddedNotification:(NSNotification *)notification {
+    [self fireAnnotationNotificationEvent:@"annotationAdded" annotation:notification.object];
+}
+
+- (void)annotationChangedNotification:(NSNotification *)notification {
+    [self fireAnnotationNotificationEvent:@"annotationChanged" annotation:notification.object];
+}
+
+- (void)annotationRemovedNotification:(NSNotification *)notification {
+    [self fireAnnotationNotificationEvent:@"annotationRemoved" annotation:notification.object];
+}
+
+- (void)fireAnnotationNotificationEvent:(NSString *) eventName annotation:(PSPDFAnnotation *)annotation{
+    bool isSignature = false;
+    if([annotation isKindOfClass:[PSPDFInkAnnotation class]]){
+        PSPDFInkAnnotation *ann = (PSPDFInkAnnotation *)annotation;
+        isSignature = ann.isSignature;
+    }
+    [self fireEvent:eventName withObject:@{
+        @"name":annotation.name == nil ? @"null" : annotation.name,
+        @"user":annotation.user == nil ? @"null" : annotation.user,
+        @"group":annotation.group == nil ? @"null" : annotation.group,
+        @"uuid":annotation.uuid == nil ? @"null" : annotation.uuid,
+        @"type":@(annotation.type),
+        @"type_str":[PSPDFUtils parseAnnotationTypeToString:annotation.type],
+        @"is_signature":@(isSignature)
+    }];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
