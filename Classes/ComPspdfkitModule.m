@@ -73,6 +73,7 @@ static BOOL PSTReplaceMethodWithBlock(Class c, SEL origSEL, SEL newSEL, id block
 // much processing here or the app will be quit forcibly
 - (void)shutdown:(id)sender {
 	[super shutdown:sender];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 - (id)moduleGUID {
