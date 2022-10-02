@@ -85,49 +85,49 @@ static BOOL PSTReplaceMethodWithBlock(Class c, SEL origSEL, SEL newSEL, id block
 }
 
 - (void)annotationAddedNotification:(NSNotification *)notification {
-    PSPDFAnnotation *annotation = notification.object;
-    [self fireAnnotationNotificationEvent:@"annotationAdded" annotation:annotation];
+    [self fireAnnotationNotificationEvent:@"annotationAdded" annotations:notification.object];
 }
 
 - (void)annotationChangedNotification:(NSNotification *)notification {
-    PSPDFAnnotation *annotation = notification.object;
-    [self fireAnnotationNotificationEvent:@"annotationChanged" annotation:annotation];
+    [self fireAnnotationNotificationEvent:@"annotationChanged" annotations:notification.object];
 }
 
 - (void)annotationRemovedNotification:(NSNotification *)notification {
-    PSPDFAnnotation *annotation = notification.object;
-    [self fireAnnotationNotificationEvent:@"annotationRemoved" annotation:annotation];
+    [self fireAnnotationNotificationEvent:@"annotationRemoved" annotations:notification.object];
 }
 
-- (void)fireAnnotationNotificationEvent:(NSString *) eventName annotation:(PSPDFAnnotation *)annotation{
-    if(annotation==nil){
+- (void)fireAnnotationNotificationEvent:(NSString *) eventName annotations:(NSArray<PSPDFAnnotation *> *)annotations{
+    if(annotations==nil || annotations.count==0){
         NSLog(@"[ERROR] Annotation is null");
         [self fireEvent:eventName withObject:@{
+            @"success":@(NO),
             @"error":@"Annotaion is null.",
         }];
         return;
     }
+    NSMutableArray<NSDictionary *> *resAnnotations = [[NSMutableArray alloc] init];
     dispatch_async(dispatch_get_main_queue(), ^{
-        BOOL isSignature = false;
-        if([annotation isKindOfClass:[PSPDFInkAnnotation class]]){
-            PSPDFInkAnnotation *ann = (PSPDFInkAnnotation *)annotation;
-            isSignature = ann.isSignature;
+        for(int i=0;i<annotations.count;i++){
+            PSPDFAnnotation *annotation = [annotations objectAtIndex:i];
+            BOOL isSignature = false;
+            if([annotation isKindOfClass:[PSPDFInkAnnotation class]]){
+                PSPDFInkAnnotation *ann = (PSPDFInkAnnotation *)annotation;
+                isSignature = ann.isSignature;
+            }
+            [resAnnotations addObject:@{
+                @"name":annotation.name == nil ? @"null" : annotation.name,
+                @"user":annotation.user == nil ? @"null" : annotation.user,
+                @"group":annotation.group == nil ? @"null" : annotation.group,
+                @"uuid":annotation.uuid == nil ? @"null" : annotation.uuid,
+                @"type":@(annotation.type),
+                @"type_str":[PSPDFUtils parseAnnotationTypeToString:annotation.type],
+                @"is_signature":@(isSignature),
+                @"annotation":[annotation description],
+            }];
         }
-        NSLog(@"[ERROR] Annotation name = %@",annotation.name == nil ? @"null" : annotation.name);
-        NSLog(@"[ERROR] Annotation user = %@",annotation.user == nil ? @"null" : annotation.user);
-        NSLog(@"[ERROR] Annotation group = %@",annotation.group == nil ? @"null" : annotation.group);
-        NSLog(@"[ERROR] Annotation uuid = %@",annotation.uuid == nil ? @"null" : annotation.uuid);
-        NSLog(@"[ERROR] Annotation type = %@",@(annotation.type));
-        NSLog(@"[ERROR] Annotation type_str = %@",[PSPDFUtils parseAnnotationTypeToString:annotation.type]);
-        NSLog(@"[ERROR] Annotation is_signature = %@",@(isSignature));
         [self fireEvent:eventName withObject:@{
-            @"name":annotation.name == nil ? @"null" : annotation.name,
-            @"user":annotation.user == nil ? @"null" : annotation.user,
-            @"group":annotation.group == nil ? @"null" : annotation.group,
-            @"uuid":annotation.uuid == nil ? @"null" : annotation.uuid,
-            @"type":@(annotation.type),
-            @"type_str":[PSPDFUtils parseAnnotationTypeToString:annotation.type],
-            @"is_signature":@(isSignature)
+            @"success":@(YES),
+            @"annotations":resAnnotations
         }];
     });
 }
