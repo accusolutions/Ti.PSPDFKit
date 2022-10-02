@@ -85,32 +85,43 @@ static BOOL PSTReplaceMethodWithBlock(Class c, SEL origSEL, SEL newSEL, id block
 }
 
 - (void)annotationAddedNotification:(NSNotification *)notification {
-    [self fireAnnotationNotificationEvent:@"annotationAdded" annotation:notification.object];
+    PSPDFAnnotation *annotation = notification.object;
+    [self fireAnnotationNotificationEvent:@"annotationAdded" annotation:annotation];
 }
 
 - (void)annotationChangedNotification:(NSNotification *)notification {
-    [self fireAnnotationNotificationEvent:@"annotationChanged" annotation:notification.object];
+    PSPDFAnnotation *annotation = notification.object;
+    [self fireAnnotationNotificationEvent:@"annotationChanged" annotation:annotation];
 }
 
 - (void)annotationRemovedNotification:(NSNotification *)notification {
-    [self fireAnnotationNotificationEvent:@"annotationRemoved" annotation:notification.object];
+    PSPDFAnnotation *annotation = notification.object;
+    [self fireAnnotationNotificationEvent:@"annotationRemoved" annotation:annotation];
 }
 
 - (void)fireAnnotationNotificationEvent:(NSString *) eventName annotation:(PSPDFAnnotation *)annotation{
-    bool isSignature = false;
-    if([annotation isKindOfClass:[PSPDFInkAnnotation class]]){
-        PSPDFInkAnnotation *ann = (PSPDFInkAnnotation *)annotation;
-        isSignature = ann.isSignature;
+    if(annotation==nil){
+        [self fireEvent:eventName withObject:@{
+            @"error":@"Annotaion is null.",
+        }];
+        return;
     }
-    [self fireEvent:eventName withObject:@{
-        @"name":annotation.name == nil ? @"null" : annotation.name,
-        @"user":annotation.user == nil ? @"null" : annotation.user,
-        @"group":annotation.group == nil ? @"null" : annotation.group,
-        @"uuid":annotation.uuid == nil ? @"null" : annotation.uuid,
-        @"type":@(annotation.type),
-        @"type_str":[PSPDFUtils parseAnnotationTypeToString:annotation.type],
-        @"is_signature":@(isSignature)
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        bool isSignature = false;
+        if([annotation isKindOfClass:[PSPDFInkAnnotation class]]){
+            PSPDFInkAnnotation *ann = (PSPDFInkAnnotation *)annotation;
+            isSignature = ann.isSignature;
+        }
+        [self fireEvent:eventName withObject:@{
+            @"name":annotation.name == nil ? @"null" : annotation.name,
+            @"user":annotation.user == nil ? @"null" : annotation.user,
+            @"group":annotation.group == nil ? @"null" : annotation.group,
+            @"uuid":annotation.uuid == nil ? @"null" : annotation.uuid,
+            @"type":@(annotation.type),
+            @"type_str":[PSPDFUtils parseAnnotationTypeToString:annotation.type],
+            @"is_signature":@(isSignature)
+        }];
+    });
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
