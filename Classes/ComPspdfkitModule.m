@@ -85,18 +85,25 @@ static BOOL PSTReplaceMethodWithBlock(Class c, SEL origSEL, SEL newSEL, id block
 }
 
 - (void)annotationAddedNotification:(NSNotification *)notification {
-    [self fireAnnotationNotificationEvent:@"annotationAdded" annotations:notification.object];
+    [self fireAnnotationNotificationEvent:@"annotationAdded" annotations:[self ensureNotifications:notification.object]];
 }
 
 - (void)annotationChangedNotification:(NSNotification *)notification {
-    [self fireAnnotationNotificationEvent:@"annotationChanged" annotations:notification.object];
+    [self fireAnnotationNotificationEvent:@"annotationChanged" annotations:[self ensureNotifications:notification.object]];
 }
 
 - (void)annotationRemovedNotification:(NSNotification *)notification {
-    [self fireAnnotationNotificationEvent:@"annotationRemoved" annotations:notification.object];
+    [self fireAnnotationNotificationEvent:@"annotationRemoved" annotations:[self ensureNotifications:notification.object]];
 }
 
-- (void)fireAnnotationNotificationEvent:(NSString *) eventName annotations:(NSArray<PSPDFAnnotation *> *)annotations{
+- (NSArray<PSPDFAnnotation *> *)ensureNotifications:(id)object {
+    if([object isInstanceOf:[PSPDFAnnotation class]]){
+        return @[(PSPDFAnnotation *)object];
+    }
+    return (NSArray<PSPDFAnnotation *> *)object;
+}
+
+- (void)fireAnnotationNotificationEvent:(NSString *) eventName annotations:(NSArray<PSPDFAnnotation *> *)annotations {
     if(annotations==nil || annotations.count==0){
         NSLog(@"[ERROR] Annotation is null");
         [self fireEvent:eventName withObject:@{
