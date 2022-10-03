@@ -250,9 +250,8 @@ _Pragma("clang diagnostic pop") \
     [[[self pdfView] controllerProxy] exportAnnotationsJSON:callback];
 }
 
-- (void)exportAnnotationsXFDF:(id)callback {
-    ENSURE_SINGLE_ARG(callback, KrollCallback);
-    [[[self pdfView] controllerProxy] exportAnnotationsXFDF:callback];
+- (void)exportAnnotationsXFDF:(NSArray *)args {
+    [[[self pdfView] controllerProxy] exportAnnotationsXFDF:args];
 }
 
 @end

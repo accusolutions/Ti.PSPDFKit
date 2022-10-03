@@ -104,7 +104,7 @@
 - (void)exportAnnotationsJSON:(id)callback;
 
 /// Export Annotations as XFDF
-- (void)exportAnnotationsXFDF:(id)callback;
+- (void)exportAnnotationsXFDF:(NSArray *)args;
 
 @end
 

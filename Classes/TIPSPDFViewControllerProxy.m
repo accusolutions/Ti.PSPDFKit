@@ -567,12 +567,21 @@ _Pragma("clang diagnostic pop")
     return;
 }
 
-- (void)exportAnnotationsXFDF:(id)callback {
-    ENSURE_SINGLE_ARG(callback, KrollCallback);
+- (void)exportAnnotationsXFDF:(NSArray *)args {
+    NSArray *onlyUuids = [args objectAtIndex:0];
+    KrollCallback *callback = [args objectAtIndex:1];
     // Collect all existing annotations from the document.
     NSMutableArray<PSPDFAnnotation *> *annotations = [NSMutableArray<PSPDFAnnotation *> array];
     for (NSArray<PSPDFAnnotation *> *pageAnnotations in [[self.controller pdfController].document allAnnotationsOfType:PSPDFAnnotationTypeAll].allValues) {
-        [annotations addObjectsFromArray:pageAnnotations];
+        if(onlyUuids!=nil && [onlyUuids count]>0){
+            for(PSPDFAnnotation *annotation in pageAnnotations){
+                if([onlyUuids indexOfObject:annotation.uuid]>=0){
+                    [annotations addObject:annotation];
+                }
+            }
+        }else{
+            [annotations addObjectsFromArray:pageAnnotations];
+        }
     }
 
     // Write the file.

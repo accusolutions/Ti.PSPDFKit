@@ -255,7 +255,7 @@ async function buildCommand(argv) {
 
     // Delegate compiling to Titanium CLI. Sometimes Titanium CLI will mess up
     // the prompt, so we also reset the ANSI escape codes just in case.
-
+    console.log('titaniumBin' ,titaniumBin);
     try {
         await spawn(titaniumBin, ["build", "--project-dir", srcroot, "--build-only", "--platform", "ios", "--sdk", titaniumVersion, "--log-level", "trace", "--no-banner", "--no-progress-bars", "--no-prompts"], spawnOptions)
         process.stdout.write(chalk.reset())
