@@ -97,7 +97,7 @@ static BOOL PSTReplaceMethodWithBlock(Class c, SEL origSEL, SEL newSEL, id block
 }
 
 - (NSArray<PSPDFAnnotation *> *)ensureNotifications:(id)object {
-    if([object isInstanceOf:[PSPDFAnnotation class]]){
+    if([object isKindOfClass:[PSPDFAnnotation class]]){
         return @[(PSPDFAnnotation *)object];
     }
     return (NSArray<PSPDFAnnotation *> *)object;
