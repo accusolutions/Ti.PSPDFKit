@@ -625,6 +625,40 @@ _Pragma("clang diagnostic pop")
     return;
 }
 
+
+- (id)importAnnotationsJSON:(id)json {
+    NSLog(@"[ERROR] PSPDFKit => importAnnotationsJSON => Method not supported yet.");
+    return @(NO);
+}
+
+- (id)importAnnotationsXFDF:(id)xfdf {
+    NSString *importXfdf = xfdf;
+    // Load from an example XFDF file.
+    NSURL *externalAnnotationsFile = [PSPDFUtils createTmpFile:@"import-annotations.xfdf"];
+    NSError *writeError = nil;
+    [importXfdf writeToURL:externalAnnotationsFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:&writeError];
+    
+    if(writeError!=nil){
+        NSLog(@"[ERROR] PSPDFKit => importAnnotationsXFDF => %@",writeError.localizedDescription);
+        return @(NO);
+    }
+    PSPDFDocumentProvider *documentProvider = [[self controller] document].documentProviders.firstObject;
+    PSPDFFileDataProvider *dataProvider = [[PSPDFFileDataProvider alloc] initWithFileURL:externalAnnotationsFile];
+
+    // Create the XFDF parser and parse all annotations.
+    PSPDFXFDFParser *parser = [[PSPDFXFDFParser alloc] initWithDataProvider:dataProvider documentProvider:documentProvider];
+    NSArray<PSPDFAnnotation *> *annotations = [parser parseWithError:NULL];
+
+    // Add the parsed annotations to the document.
+    if([[[self controller] document] addAnnotations:annotations options:nil]){
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        [fileManager removeItemAtPath:[externalAnnotationsFile path]  error:NULL];
+        fileManager = nil;
+        return @(YES);
+    }
+    return @(NO);
+}
+
 @end
 
 id PSSafeCast(id object, Class targetClass) {

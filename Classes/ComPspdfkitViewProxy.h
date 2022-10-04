@@ -106,6 +106,12 @@
 /// Export Annotations as XFDF
 - (void)exportAnnotationsXFDF:(NSArray *)args;
 
+/// Import Annotations from JSON
+- (id)importAnnotationsJSON:(id)json;
+
+/// Import Annotations from XFDF
+- (id)importAnnotationsXFDF:(id)xfdf;
+
 @end
 
 @interface ComPspdfkitSourceViewProxy : ComPspdfkitViewProxy @end

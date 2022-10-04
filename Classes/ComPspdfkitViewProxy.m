@@ -254,6 +254,14 @@ _Pragma("clang diagnostic pop") \
     [[[self pdfView] controllerProxy] exportAnnotationsXFDF:args];
 }
 
+- (id)importAnnotationsJSON:(id)json {
+    return [[[self pdfView] controllerProxy] importAnnotationsJSON:json];
+}
+
+- (id)importAnnotationsXFDF:(id)xfdf {
+    return [[[self pdfView] controllerProxy] importAnnotationsXFDF:xfdf];
+}
+
 @end
 
 @implementation ComPspdfkitSourceViewProxy
