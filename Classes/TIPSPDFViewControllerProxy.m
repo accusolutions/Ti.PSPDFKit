@@ -575,7 +575,7 @@ _Pragma("clang diagnostic pop")
     for (NSArray<PSPDFAnnotation *> *pageAnnotations in [[self.controller pdfController].document allAnnotationsOfType:PSPDFAnnotationTypeAll].allValues) {
         if(onlyUuids!=nil && [onlyUuids count]>0){
             for(PSPDFAnnotation *annotation in pageAnnotations){
-                if([onlyUuids indexOfObject:annotation.uuid]>=0){
+                if([onlyUuids indexOfObject:annotation.name]>=0){
                     [annotations addObject:annotation];
                 }
             }
