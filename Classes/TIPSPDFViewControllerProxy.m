@@ -632,11 +632,12 @@ _Pragma("clang diagnostic pop")
 }
 
 - (id)importAnnotationsXFDF:(id)xfdf {
-    NSString *importXfdf = xfdf;
+    ENSURE_STRING(xfdf);
+    NSString *importXfdf = (NSString *)xfdf;
     // Load from an example XFDF file.
     NSURL *externalAnnotationsFile = [PSPDFUtils createTmpFile:@"import-annotations.xfdf"];
     NSError *writeError = nil;
-    [importXfdf writeToURL:externalAnnotationsFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:&writeError];
+    [importXfdf writeToURL:externalAnnotationsFile atomically:YES encoding:NSStringEncodingConversionAllowLossy error:&writeError];
     
     if(writeError!=nil){
         NSLog(@"[ERROR] PSPDFKit => importAnnotationsXFDF => %@",writeError.localizedDescription);
